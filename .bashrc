@@ -145,48 +145,52 @@ export PS2="$LIGHT_BLUE└─(${LIGHT_RED}continued$LIGHT_BLUE)$GREEN> "
  
 promptcmd(){
 if [ $? -eq 0 ]; then
-        export PS1=`printf "%s" "$LIGHT_BLUE┌─($BLUE\d$LIGHT_BLUE)$YELLOW\w\n$LIGHT_BLUE└─($YELLOW\u$LIGHT_BLUE)[$LIGHT_GREEN\h$LIGHT_BLUE]:$GREEN$ "`
+	export PS1=`printf "%s%s%s" "$LIGHT_BLUE┌─($BLUE\d$LIGHT_BLUE)" $(gitbranch) "$YELLOW\w\n$LIGHT_BLUE└─($YELLOW\u$LIGHT_BLUE)[$LIGHT_GREEN\h$LIGHT_BLUE]:$GREEN$ "`
 else
-         export PS1=`printf "%s" "$LIGHT_RED┌─($BLUE\d$LIGHT_RED)$YELLOW\w\n$LIGHT_RED└─($YELLOW\u$LIGHT_RED)[$LIGHT_GREEN\h$LIGHT_RED]:$GREEN$ "`
+	export PS1=`printf "%s%s%s" "$LIGHT_RED┌─($BLUE\d$LIGHT_RED)" $(gitbranch) "$YELLOW\w\n$LIGHT_RED└─($YELLOW\u$LIGHT_RED)[$LIGHT_GREEN\h$LIGHT_RED]:$GREEN$ "`
 
 fi
 }
 
+gitbranch(){
+	message=`git branch 2>&1 | sed -n -e 's/^\* \(.*\)/\1/p'; exit ${PIPESTATUS[0]}`
+	
+	if [ $? -eq 0 ]; then
+		echo $LIGHT_BLUE[$CYAN$message$LIGHT_BLUE]
+	fi
+}
 
-#function error_handler {
-#      if [ $? -eq 127 ]; then
-#          echo "It looks like your trying to run a shell command."
-#          echo "Would you like some help with that?"
-#          cat << EOF
-#         ___
-#        /   \\
-#       /     \\
-#      /       \\
-#    ___       ___
-#   /___\\     /___\\
-#   \\*__/     \\*__/
-#     |        |
-#     | |      | |
-#     | |      | |
-#     | |      | |
-#     |  \\    /  |
-#     |   \\__/   |
-#      \\        /
-#       \\      /
-#        \\____/
-#
-#
-#EOF
+function error_handler {
+      if [ $? -eq 127 ]; then
+          echo "It looks like your trying to run a shell command."
+          echo "Would you like some help with that?"
+          cat << EOF
+         ___
+        /   \\
+       /     \\
+      /       \\
+    ___       ___
+   /___\\     /___\\
+   \\*__/     \\*__/
+     |        |
+     | |      | |
+     | |      | |
+     | |      | |
+     |  \\    /  |
+     |   \\__/   |
+      \\        /
+       \\      /
+        \\____/
+
+
+EOF
 #bash /home/daniel/systemscripts/errorsound.sh
-#clippy error code by SigMa
-#      fi   
-#}
+clippy error code by SigMa
+      fi   
+}
     
-#    trap 'error_handler' ERR 
+    trap 'error_handler' ERR 
 
 alias music='env DISPLAY=:0.0 rhythmbox-client --no-start '
 
 eval $( dircolors -b $HOME/dircolours )
-
-
-. /home/daniel/torch/install/bin/torch-activate
