@@ -35,43 +35,6 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color) color_prompt=yes;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;33m\]@\[\033[01;31m\]\h\[\033[01;33m\]:\[\033[01;33m\]\w\[\033[00;32m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -127,7 +90,7 @@ RESET="\[\033[0m\]"
 BROWN="\[\033[0;33m\]"
 BLUE="\[\033[0;34m\]"
 PURPLE="\[\033[0;35m\]"
-CYAN="\[\033[0;36m\] "
+CYAN="\[\033[0;36m\]"
 GRAY="\[\033[1;30m\]"
 WHITE="\[\033[1;37m\]"
 YELLOW="\[\033[1;33m\]"
@@ -138,6 +101,26 @@ LIGHT_PURPLE="\[\033[1;35m\]"
 LIGHT_RED="\[\033[1;31m\]"
 LIGHT_GREEN="\[\033[1;32m\]"
 
+MBR=$RED       #master branch warning colour
+
+#Normal Prompt Colours
+B=$LIGHT_BLUE  #bracket colour
+D=$BLUE        #date colour
+BR=$CYAN       #git branch colour
+WD=$LIGHT_GRAY     #working directory
+U=$LIGHT_PURPLE      #username colour
+H=$LIGHT_GRAY #hostname colour
+CMD=$CYAN     #command colour
+
+#Error Prompt Colours
+EB=$RED        #bracket colour
+ED=$D          #date colour
+EBR=$BR        #git branch colour
+EWD=$WD        #working directory
+EU=$U          #username colour
+EH=$H          #hostname colour
+ECMD=$CMD      #command colour
+
 export PATH="$PATH:$HOME/hpc_commands:$HOME/opt/cross/bin"
 
 export PROMPT_COMMAND='promptcmd'
@@ -145,52 +128,60 @@ export PS2="$LIGHT_BLUE└─(${LIGHT_RED}continued$LIGHT_BLUE)$GREEN> "
  
 promptcmd(){
 if [ $? -eq 0 ]; then
-	export PS1=`printf "%s%s%s" "$LIGHT_BLUE┌─($BLUE\d$LIGHT_BLUE)" $(gitbranch) "$YELLOW\w\n$LIGHT_BLUE└─($YELLOW\u$LIGHT_BLUE)[$LIGHT_GREEN\h$LIGHT_BLUE]:$GREEN$ "`
+    export PS1=`printf "%s%s%s" "$B┌─($D\d$B)" $(gitbranch $?) "$WD\w\n$B└─($U\u$B)[$H\h$B]:$CMD$ "`
 else
-	export PS1=`printf "%s%s%s" "$LIGHT_RED┌─($BLUE\d$LIGHT_RED)" $(gitbranch) "$YELLOW\w\n$LIGHT_RED└─($YELLOW\u$LIGHT_RED)[$LIGHT_GREEN\h$LIGHT_RED]:$GREEN$ "`
+    export PS1=`printf "%s%s%s" "$EB┌─($ED\d$EB)" $(gitbranch $?) "$EWD\w\n$EB└─($EU\u$EB)[$EH\h$EB]:$ECMD$ "`
 
 fi
 }
 
 gitbranch(){
-	message=`git branch 2>&1 | sed -n -e 's/^\* \(.*\)/\1/p'; exit ${PIPESTATUS[0]}`
-	
-	if [ $? -eq 0 ]; then
-		echo $LIGHT_BLUE[$CYAN$message$LIGHT_BLUE]
-	fi
+    message=`git branch 2>&1 | sed -n -e 's/^\* \(.*\)/\1/p'; exit ${PIPESTATUS[0]}`
+    if [ $? -eq 0 ]; then
+        temp=`echo $message | tr -d '/'|tr -d '('|tr -d ')'|tr -d ' '` 
+        if [[ $temp -eq 'master' ]]; then
+            message=$MBR$message
+        fi
+        if [ $1 -eq 0 ]; then
+            echo $B[$BR$message$B]
+        else
+            echo $EB[$EBR$message$EB]
+        fi
+    fi
 }
-
-function error_handler {
-      if [ $? -eq 127 ]; then
-          echo "It looks like your trying to run a shell command."
-          echo "Would you like some help with that?"
-          cat << EOF
-         ___
-        /   \\
-       /     \\
-      /       \\
-    ___       ___
-   /___\\     /___\\
-   \\*__/     \\*__/
-     |        |
-     | |      | |
-     | |      | |
-     | |      | |
-     |  \\    /  |
-     |   \\__/   |
-      \\        /
-       \\      /
-        \\____/
-
-
-EOF
-#bash /home/daniel/systemscripts/errorsound.sh
-clippy error code by SigMa
-      fi   
-}
-    
-    trap 'error_handler' ERR 
+#function error_handler {
+#      if [ $? -eq 127 ]; then
+#          echo "It looks like your trying to run a shell command."
+#          echo "Would you like some help with that?"
+#          cat << EOF
+#         ___
+#        /   \\
+#       /     \\
+#      /       \\
+#    ___       ___
+#   /___\\     /___\\
+#   \\*__/     \\*__/
+#     |        |
+#     | |      | |
+#     | |      | |
+#     | |      | |
+#     |  \\    /  |
+#     |   \\__/   |
+#      \\        /
+#       \\      /
+#        \\____/
+#
+#
+#EOF
+##bash /home/daniel/systemscripts/errorsound.sh
+##clippy error code by SigMa
+#      fi   
+#}
+#    
+#    trap 'error_handler' ERR 
 
 alias music='env DISPLAY=:0.0 rhythmbox-client --no-start '
 
 eval $( dircolors -b $HOME/dircolours )
+
+eval $(thefuck --alias)
