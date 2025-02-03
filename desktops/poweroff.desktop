@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+
+Name=Poweroff
+Exec=/usr/sbin/poweroff
+Icon=system-shutdown-symbolic

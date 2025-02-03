@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+
+Name=Reboot
+Exec=/usr/sbin/reboot
+Icon=system-reboot-symbolic
