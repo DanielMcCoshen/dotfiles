@@ -143,7 +143,7 @@ set $bg-colour			#232729BF
 set $inactive-bg-colour 	#33393BBF
 set $text-colour		#c3c4c3
 set $inactive-text-colour	#63696b
-set $urgent-bg-colour		#e53935
+set $urgent-bg-colour		#e53935BF
 
 #				Boarder			Background		text			indicator
 client.focused			$bg-colour		$bg-colour		$text-colour		#000020
@@ -154,21 +154,8 @@ client.urgent			$urgent-bg-colour	$urgent-bg-colour	$text-colour		#000020
 gaps inner 3
 default_border normal 0
 
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
 bar {
-    status_command i3blocks -c ~/.config/i3/i3blocks.conf
-#        tray_output HDMI-1
-	colors {
-		background $bg-colour
-		separator #757575
-		#			boarder			background		text
-		focused_workspace	$bg-colour		$bg-colour		$text-colour
-		inactive_workspace	$inactive-bg-colour	$inactive-bg-colour	$inactive-text-colour
-		urgent_workspace	$urgent-bg-colour	$urgent-bg-colour	$text-colour
-	}
-	position top
+    swaybar_command waybar
 }
 
 #screen lock
@@ -202,7 +189,7 @@ bindsym $mod+m move workspace to output right
 bindsym $mod+d exec wofi --show
 
 #print screen button
-bindsym Print exec grim 
+bindsym Print exec grim -g $(slurp)
 
 #set wallpaper
 output * bg /home/daniel/Pictures/The-Night-Sky-Wallpaper.jpg fill

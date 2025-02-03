@@ -1,0 +1,64 @@
+{
+    "height": 30, 
+    "spacing": 4, 
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": [],
+    "modules-right": ["network", "pulseaudio", "cpu", "custom/clock"],
+    
+    "sway/workspaces": {
+        "disable-scroll-wraparound": true
+    },
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "custom/clock": {
+        "interval": 60,
+        "format": "{}",
+        "exec": "date '+%b %d, %Y %H:%M'"
+    },
+    "cpu": {
+        "format": "{load:.3}",
+        "tooltip-format": "{icon0} {icon1} {icon2} {icon3} {icon4} {icon5} {icon6} {icon7} {icon8} {icon9} {icon10} {icon11} {icon12} {icon13} {icon14} {icon15}",
+        "format-icons": [
+            "<span color='#69ff94'>▁</span>",
+            "<span color='#2aa9ff'>▂</span>",
+            "<span color='#f8f8f2'>▃</span>",
+            "<span color='#f8f8f2'>▄</span>",
+            "<span color='#ffffa5'>▅</span>",
+            "<span color='#ffffa5'>▆</span>",
+            "<span color='#ff9977'>▇</span>",
+            "<span color='#dd532e'>█</span>"
+       ]
+    },
+    "pulseaudio": {
+        "format": " {volume}%",
+        "format-bluetooth": "  {volume}%",
+        "format-bluetooth-muted": " ",
+        "format-muted": "",
+        "on-click": "pavucontrol"
+    },
+    "network": {
+        "format-wifi": " {essid} ({signalStrength}%)",
+        "format-ethernet": "",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr} via {gwaddr}",
+        "format-linked": " (No IP)",
+        "format-disconnected": " Disconnected",
+        "on-click": "nm-connection-editor"
+    },
+    "backlight": {
+        "format": "{percent}% {icon}",
+        "format-icons": ["", ""]
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["", "", "", "", ""]
+    }
+}
+
