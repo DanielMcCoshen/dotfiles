@@ -1,14 +1,13 @@
 #rofi, compton, i3blocks, feh 
 
-
-
-# Should you change your keyboard layout some time, delete
-# this file and re-run i3-config-wizard(1).
-#
-
 # i3 config file (v4)
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
+
+#pre-run env vars
+exec systemctl --user set-environment XDG_CONFIG_HOME=/home/daniel/.config
+exec systemctl --user set-environment GTK_USE_PORTAL=0
+
 
 set $mod Mod4
 
@@ -16,38 +15,20 @@ set $mod Mod4
 # is used in the bar {} block below.
 font pango: liberationSans 9
 
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# Before i3 v4.8, we used to recommend this one as the default:
-# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-# The font above is very space-efficient, that is, it looks good, sharp and
-# clear in small sizes. However, its unicode glyph coverage is limited, the old
-# X core fonts rendering does not support right-to-left and this being a bitmap
-# font, it doesn’t scale on retina/hidpi displays.
-
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec foot
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
-
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -56,10 +37,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -68,7 +49,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+h split h
+bindsym $mod+semicolon split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -124,12 +105,13 @@ bindsym $mod+Shift+0 move container to workspace $10
 
 assign [class="Rhythmbox"] $10
 assign [class="discord"] $9
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
+bindsym $mod+Shift+r reload 
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your X session.' -b 'Yes, exit sway' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -169,15 +151,16 @@ client.unfocused		$inactive-bg-colour	$inactive-bg-colour	$inactive-text-colour	
 client.focused_inactive		$inactive-bg-colour     $inactive-bg-colour     $inactive-text-colour   #000020
 client.urgent			$urgent-bg-colour	$urgent-bg-colour	$text-colour		#000020
 
-hide_edge_borders both
+gaps inner 3
+default_border normal 0
 
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    status_command i3blocks -c ~/.config/i3/i3blocks.conf
 #        tray_output HDMI-1
-	colors{
+	colors {
 		background $bg-colour
 		separator #757575
 		#			boarder			background		text
@@ -191,16 +174,19 @@ bar {
 #screen lock
 bindsym $mod+x exec "~/bin/locker.sh"
 
-#autolock
-exec xautolock -time 15 -locker '~/bin/locker.sh'
+exec swayidle -w \
+    timeout 600 '~/bin/locker.sh'
 
 #set screen positions
-exec --no-startup-id xrandr --output HDMI-0 --auto --left-of DVI-I-0
+output HDMI-A-1 pos 0 750
+output DP-2 pos 1600 450 
+output DP-3 pos 3520 0 
+output DP-3 transform 270 
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 1 -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 1 toggle # mute sound
 
 # Media player controls
 bindsym XF86AudioPlay exec rhythmbox-client --play-pause
@@ -213,18 +199,21 @@ bindsym $mod+n move workspace to output left
 bindsym $mod+m move workspace to output right
 
 # start rofi (a program launcher)
-bindsym $mod+d exec sh bin/rofistart.sh 
- 
+bindsym $mod+d exec wofi --show
+
+#print screen button
+bindsym Print exec grim 
 
 #set wallpaper
-exec_always feh --bg-scale /home/daniel/Pictures/The-Night-Sky-Wallpaper.jpg
+output * bg /home/daniel/Pictures/The-Night-Sky-Wallpaper.jpg fill
 
 #start startup programs
-exec rhythmbox
 exec discord
+exec nm-applet
 
-#start compositor
-exec compton --backend glx --vsync opengl-swc
+#start other components
+exec dunst
 
-#start synergy
-exec synergy
+#Microsoft Teams
+no_focus [title="Microsoft Teams Notification"]
+for_window [title="Microsoft Teams Notification"] floating enable, move position 25 px 25 px 

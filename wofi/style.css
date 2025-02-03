@@ -1,0 +1,54 @@
+* {
+    border-radius: 0px;
+    outline: none;
+}
+
+*:focus {
+    outline: none;
+}
+
+window {
+    font-size: 15px;
+    font-family: "Liberation Sans";
+    background-color: rgba(51, 57, 59, .9);
+    color: rgb(99, 105, 107);
+}
+
+#entry{
+    padding: 0.25em;
+}
+
+#entry:selected {
+    background-color: rgb(35, 39, 41);
+    color: rgb(195, 196, 195);
+}
+
+#text:selected {
+    color: rgb(195, 196, 195);
+}
+
+#input {
+    background-color: rgba(51, 57, 59, 0.9);
+    color: rgb(195, 196, 195);
+    padding: 0.25em;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-color: rgba(51, 57, 59, .9);
+}
+
+#input:focus {
+    background-color: rgb(35, 39, 41);
+    outline: none;
+}
+
+image {
+    margin-left: .25em;
+    margin-right: .25em;
+    background-color: rgba(0, 0, 0, 0);
+    opacity: 0.1;
+}
+
+image:selected {
+    opacity: 1;
+}
