@@ -139,8 +139,8 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-set $bg-colour			#232729
-set $inactive-bg-colour 	#33393B
+set $bg-colour			#232729BF
+set $inactive-bg-colour 	#33393BBF
 set $text-colour		#c3c4c3
 set $inactive-text-colour	#63696b
 set $urgent-bg-colour		#e53935
