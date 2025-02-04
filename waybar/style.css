@@ -50,7 +50,7 @@ window#waybar {
 
 #mode {
     background-color: rgba(104, 72, 219, 0.75);
-    box-shadow: inset 0 -3px rgb(155, 128, 206);
+    box-shadow: inset 0 -3px rgb(165, 151, 219);
     padding: 0 5px;
 }
 
