@@ -3,7 +3,7 @@
     "spacing": 4, 
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": ["network", "pulseaudio", "cpu", "custom/clock"],
+    "modules-right": ["network", "pulseaudio", "cpu", "battery", "custom/clock"],
     
     "sway/workspaces": {
         "disable-scroll-wraparound": true
@@ -54,9 +54,9 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% ",
-        "format-plugged": "{capacity}% ",
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
         "format-alt": "{time} {icon}",
         "format-icons": ["", "", "", "", ""]
     }
