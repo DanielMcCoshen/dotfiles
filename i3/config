@@ -189,7 +189,7 @@ bindsym $mod+m move workspace to output right
 bindsym $mod+d exec wofi --show
 
 #print screen button
-bindsym Print exec grim -g $(slurp)
+bindsym Print exec grim -g "$(slurp)"
 
 #set wallpaper
 output * bg /home/daniel/Pictures/The-Night-Sky-Wallpaper.jpg fill
