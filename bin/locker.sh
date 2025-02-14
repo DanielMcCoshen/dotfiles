@@ -1,13 +1,9 @@
-#!/bin/sh -e
-
-#take a screenshot
-scrot /tmp/screen_locked.png
-
-# Pixellate it 10x
-mogrify -scale 10% -scale 1000% /tmp/screen_locked.png
-
-# Lock screen displaying this image.
-i3lock -i /tmp/screen_locked.png
-
-# Turn the screen off after a delay.
-sleep 60; pgrep i3lock && xset dpms force off
+#!/bin/bash -e
+swayidle \
+    timeout 10 'swaymsg "output * dpms off"' \
+    resume 'swaymsg "output * dpms on"' &
+# Locks the screen immediately
+swaylock --image /home/daniel/Pictures/The-Night-Sky-Wallpaper.jpg --scaling=fill
+# Kills all but one swayidle instance so that idle timer doesn't keep running
+#for proc in $(pgrep swayidle |sed '1d'); do kill $proc; done
+killall swayidle
